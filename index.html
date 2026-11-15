@@ -86,6 +86,13 @@
   .for-phone, .for-mac { display: none; }
   [data-device='phone'] .for-phone, [data-device='mac'] .for-mac { display: block; }
   [data-device='phone'] .for-pc, [data-device='mac'] .for-pc { display: none; }
+  /* The steps: Windows ones unless this is a Mac. A phone sees the Windows ones too. */
+  .steps-mac { display: none; }
+  [data-device='mac'] .steps-mac { display: block; }
+  [data-device='mac'] .steps-pc { display: none; }
+  .link { padding: 0; background: none; border: 0; color: var(--flag); font: inherit; text-decoration: underline; cursor: pointer; }
+  .sub { margin: 0.9rem 0 0; padding-left: 1.5rem; }
+  .sub li { margin-top: 0.45rem; }
 
   /* The three steps. */
   .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
@@ -154,9 +161,10 @@
 
   <div class="get">
     <a class="button for-pc" id="download" href="https://github.com/jimling116/war-room-tv/releases/latest/download/War-Room-TV-Setup.exe">Download for Windows<small>Free &middot; 105 MB &middot; Windows 10 or 11</small></a>
+    <a class="button for-mac" id="download-mac" href="https://github.com/jimling116/war-room-tv/releases/latest/download/War-Room-TV-mac.dmg">Download for Mac<small>Free &middot; 220 MB &middot; macOS 13 or newer, Intel or Apple Silicon</small></a>
 
     <div class="note for-phone">
-      <b>You are on a phone.</b> War Room TV goes on the Windows computer that shows the game, like a laptop plugged into the TV. Open this page on that computer:
+      <b>You are on a phone.</b> War Room TV goes on the Windows or Mac computer that shows the game, like a laptop plugged into the TV. Open this page on that computer:
       <p class="address" id="address"></p>
       <div class="row">
         <button class="button quiet" id="copy" type="button">Copy the link</button>
@@ -164,11 +172,10 @@
       </div>
     </div>
 
-    <div class="note for-mac">
-      <b>The Mac version is not ready yet.</b> It will be on this page when it is. War Room TV works on Windows 10 and 11 today.
-    </div>
 
-    <p class="dim small for-pc">No account, no sign-up. On a Mac? That version is on the way.</p>
+    <p class="dim small for-pc">No account, no sign-up. <button type="button" class="link" data-show="mac">On a Mac? Get the Mac version.</button></p>
+    <p class="dim small for-mac">No account, no sign-up. <button type="button" class="link" data-show="pc">On Windows? Get the Windows version.</button></p>
+    <p class="dim small for-mac"><b>The Mac version is brand new.</b> If anything looks off, say so in the league chat.</p>
     <p class="dim small for-pc"><b>New in version 0.2:</b> each team's chance of winning beside its score, and your matchup player by player. Already have War Room TV? Download it again to update.</p>
   </div>
 
@@ -181,7 +188,7 @@
   </figure>
 
   <h2>Three steps</h2>
-  <ol class="steps">
+  <ol class="steps steps-pc">
     <li>
       <h3>Download it</h3>
       <p>Press the yellow button. The file is called <b>War-Room-TV-Setup.exe</b>.</p>
@@ -232,6 +239,37 @@
     </li>
   </ol>
 
+  <ol class="steps steps-mac">
+    <li>
+      <h3>Download it</h3>
+      <p>Press the yellow button. The file is called <b>War-Room-TV-mac.dmg</b>. Open it, then drag <b>War Room TV</b> onto the <b>Applications</b> folder in the window that appears.</p>
+    </li>
+
+    <li>
+      <h3>Open it and tell macOS it is fine</h3>
+      <p>Open War Room TV from Applications. macOS says <b>"War Room TV" Not Opened</b>, because Apple could not check it. It says this for every app whose maker has not paid Apple for a developer account, and this one was made for our league, for free.</p>
+      <ol class="sub">
+        <li>Click <b>Done</b>, not Move to Trash.</li>
+        <li>Open <b>System Settings</b>, choose <b>Privacy &amp; Security</b>, and scroll down to <b>Security</b>.</li>
+        <li>Beside the line about War Room TV, click <b>Open Anyway</b>, confirm, and enter your Mac's password. Do it within the hour, while the button is still there.</li>
+      </ol>
+      <p class="dim small">You only do this once. On macOS 13 or 14 there is a shortcut instead: hold Control, click the app, choose Open, then Open again.</p>
+      <p class="dim small">If macOS says the app <b>is damaged and can't be opened</b>, stop and tell the league. That is not a warning to click through.</p>
+    </li>
+
+    <li>
+      <h3>Pick your team</h3>
+      <p>The app opens and asks which team is yours. Click it once. It remembers.</p>
+      <div class="shots">
+        <figure class="shot wide">
+          <div class="frame"><img src="images/team-select.png" width="1024" height="640" alt="A dark screen asking Which team is yours, with twelve team names to choose from."></div>
+          <figcaption class="dim small">Yours will list our twelve teams.</figcaption>
+        </figure>
+      </div>
+      <p>Now put the game on full screen the way you always do. The score boxes stay on top, and your mouse and keyboard still work the video underneath. The app has no Dock icon: look for the small TV in the menu bar, at the top of the screen.</p>
+    </li>
+  </ol>
+
   <h2>Five keys worth knowing</h2>
   <p class="dim">They work from anywhere, even while the game is full screen.</p>
   <ul class="keys">
@@ -257,6 +295,14 @@
     <div>
       <p>It has no window of its own: only the boxes over the game, and a small TV icon by the clock (it may be behind the <b>^</b> arrow). To get settings back, press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd>, click that icon, or just open War Room TV again from the Start menu.</p>
       <p>To close it, click the TV icon and choose <b>Quit</b>.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>On a Mac: where it is, and removing it</summary>
+    <div>
+      <p>There is no Dock icon and no window: only the boxes over the game, and a small TV in the menu bar at the top of the screen. Click it for settings or to quit. The keys use <kbd>Control</kbd> + <kbd>Option</kbd>.</p>
+      <p>To remove it, quit it from that icon and drag War Room TV from Applications to the Trash. Your sounds folder, War Room TV inside Music, is left alone.</p>
     </div>
   </details>
 
@@ -331,7 +377,17 @@
     var touchMac = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1; // an iPad that says it is a Mac
     var phone = /Android|iPhone|iPad|iPod/i.test(ua) || touchMac;
     var mac = /Macintosh|Mac OS X/.test(ua) && !phone;
-    document.documentElement.setAttribute('data-device', phone ? 'phone' : mac ? 'mac' : 'pc');
+    // On a Mac the same keys are Control and Option. The key names are swapped where they are shown.
+    var keys = [].slice.call(document.querySelectorAll('.keys kbd, figcaption kbd'));
+    var names = keys.map(function (k) { return k.textContent; });
+    function show(device) {
+      document.documentElement.setAttribute('data-device', device);
+      keys.forEach(function (k, i) { k.textContent = device === 'mac' ? (names[i] === 'Ctrl' ? 'Control' : names[i] === 'Alt' ? 'Option' : names[i]) : names[i]; });
+    }
+    show(phone ? 'phone' : mac ? 'mac' : 'pc');
+    [].forEach.call(document.querySelectorAll('[data-show]'), function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-show')); window.scrollTo(0, 0); });
+    });
 
     var here = location.href.split('#')[0].split('?')[0];
     var address = document.getElementById('address');
