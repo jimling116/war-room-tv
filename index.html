@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="War Room TV puts the Real Men Pretend scores on top of the game you are watching.">
+<title>War Room TV</title>
+<link rel="icon" type="image/png" href="images/icon.png">
+<style>
+  /* The same colours and typefaces as the app itself, so the page and the app look like one thing. */
+  :root {
+    --night: #070b14;
+    --panel: #0f1728;
+    --rule: #26314a;
+    --chalk: #f4f6f2;
+    --dim: #aab4c6;
+    --flag: #ffd21f;
+    --turf: #1c5c38;
+    --turf-deep: #0d2f1c;
+    --narrow: 'Bahnschrift', 'DIN Condensed', 'Avenir Next Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+    --sans: 'Bahnschrift', 'DIN Alternate', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--chalk);
+    font: 400 1.125rem/1.55 var(--sans);
+  }
+  .page { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+  h1, h2, h3 { font-family: var(--narrow); font-weight: 700; line-height: 1.1; margin: 0; letter-spacing: 0.005em; }
+  h1 { font-size: clamp(2.3rem, 8vw, 3.6rem); }
+  h2 { font-size: 1.9rem; margin: 3.25rem 0 1rem; }
+  h3 { font-size: 1.45rem; }
+  p { margin: 0.6rem 0 0; }
+  a { color: var(--flag); }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--chalk); outline-offset: 3px; border-radius: 4px; }
+  b, strong { font-weight: 700; color: #fff; }
+  .dim { color: var(--dim); }
+  .small { font-size: 0.95rem; }
+
+  /* Top: name, one line, the picture of it at work. */
+  .brand { display: flex; align-items: center; gap: 0.7rem; font: 700 1.25rem/1 var(--narrow); color: var(--dim); margin-bottom: 1.6rem; }
+  .brand img { width: 2.5rem; height: 2.5rem; }
+  .lede { font-size: 1.25rem; color: var(--dim); max-width: 34rem; }
+
+  .tv { margin: 2.4rem 0 0; }
+  .tv-screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 0.55rem solid var(--flag);
+    border-radius: 1.1rem;
+    overflow: hidden;
+    /* A football field seen from above: turf, a yard line every ten yards, darker toward the edges. */
+    background:
+      radial-gradient(ellipse at 50% 45%, transparent 35%, rgb(7 11 20 / 0.55) 100%),
+      repeating-linear-gradient(90deg, transparent 0 9.6%, rgb(255 255 255 / 0.16) 9.6% 10%),
+      linear-gradient(180deg, var(--turf) 0%, var(--turf-deep) 100%);
+  }
+  .tv-screen img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tv-stand { width: 24%; height: 0.55rem; margin: 0.7rem auto 0; background: var(--flag); border-radius: 1rem; }
+  .tv figcaption { margin-top: 0.8rem; text-align: center; }
+
+  /* The download. */
+  .get { margin-top: 1.6rem; }
+  .button {
+    display: block; width: 100%;
+    padding: 1.15rem 1.25rem;
+    background: var(--flag); color: var(--night);
+    font: 700 1.6rem/1.1 var(--narrow); text-align: center; text-decoration: none;
+    border: 0; border-radius: 0.7rem; cursor: pointer;
+  }
+  .button:hover { background: #ffe066; }
+  .button small { display: block; margin-top: 0.3rem; font: 400 1rem/1.2 var(--sans); }
+  .button.quiet { background: transparent; color: var(--chalk); border: 2px solid var(--rule); font-size: 1.2rem; padding: 0.8rem 1rem; }
+  .button.quiet:hover { border-color: var(--dim); background: transparent; }
+  .note { margin-top: 1rem; padding: 1rem 1.1rem; background: var(--panel); border-left: 0.3rem solid var(--flag); border-radius: 0.4rem; }
+  .note .row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.9rem; }
+  .note .row .button { width: auto; flex: 1 1 12rem; }
+  .address { font-weight: 700; color: #fff; word-break: break-all; }
+
+  /* Which notes show depends on the device (set by the script at the bottom; with no script, a PC is assumed). */
+  .for-phone, .for-mac { display: none; }
+  [data-device='phone'] .for-phone, [data-device='mac'] .for-mac { display: block; }
+  [data-device='phone'] .for-pc, [data-device='mac'] .for-pc { display: none; }
+
+  /* The three steps. */
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .steps > li { counter-increment: step; padding: 1.6rem 0 1.8rem; border-top: 1px solid var(--rule); }
+  .steps > li:first-child { border-top: 0; padding-top: 0.4rem; }
+  .steps h3::before {
+    content: counter(step);
+    display: inline-grid; place-items: center;
+    width: 2.1rem; height: 2.1rem; margin-right: 0.7rem;
+    background: var(--flag); color: var(--night); border-radius: 50%;
+    font-size: 1.3rem; vertical-align: 0.08em;
+  }
+  .browsers { margin: 0.9rem 0 0; padding: 0; list-style: none; }
+  .browsers li { margin-top: 0.5rem; padding-left: 1rem; border-left: 2px solid var(--rule); }
+
+  .shots { display: grid; gap: 1.4rem; margin-top: 1.2rem; }
+  @media (min-width: 44rem) { .shots.two { grid-template-columns: 1fr 1fr; } }
+  .shot { margin: 0; }
+  .shot .frame { position: relative; max-width: 534px; }
+  .shot img { display: block; width: 100%; height: auto; border-radius: 0.3rem; }
+  .shot figcaption { margin-top: 0.6rem; }
+  .shot.wide .frame { max-width: 100%; }
+  .shot.wide img { border: 1px solid var(--rule); border-radius: 0.5rem; }
+  /* Marks the thing to click. Its place comes from where the button really is in the picture. */
+  .ring {
+    position: absolute;
+    left: calc(var(--x) - 2.5%); top: calc(var(--y) - 2.5%);
+    width: calc(var(--w) + 5%); height: calc(var(--h) + 5%);
+    border: 0.25rem solid var(--flag); border-radius: 0.6rem;
+    box-shadow: 0 0 0 0.2rem rgb(7 11 20 / 0.55);
+    animation: ring 1.6s ease-in-out infinite;
+  }
+  .ring span {
+    position: absolute; left: 50%; bottom: calc(100% + 0.55rem); transform: translateX(-50%);
+    padding: 0.2rem 0.6rem; white-space: nowrap;
+    background: var(--flag); color: var(--night); border-radius: 0.3rem;
+    font: 700 1.05rem/1.2 var(--narrow);
+  }
+  /* Beside the ring instead of above it, where the label would cover the warning's own words. */
+  .ring.beside span { left: calc(100% + 0.7rem); bottom: auto; top: 50%; transform: translateY(-50%); }
+  @keyframes ring { 50% { box-shadow: 0 0 0 0.2rem rgb(7 11 20 / 0.55), 0 0 0 0.75rem rgb(255 210 31 / 0.28); } }
+  @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+
+  /* Keys. */
+  .keys { margin: 1rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.55rem; }
+  kbd { display: inline-block; padding: 0.05rem 0.5rem; background: var(--panel); border: 1px solid var(--rule); border-bottom-width: 3px; border-radius: 0.35rem; font: 700 1rem/1.5 var(--sans); color: #fff; }
+
+  /* Things most people will never need: folded away. */
+  details { border-top: 1px solid var(--rule); }
+  details:last-of-type { border-bottom: 1px solid var(--rule); }
+  summary { padding: 1rem 0; cursor: pointer; font: 700 1.3rem/1.2 var(--narrow); list-style-position: outside; }
+  details > div { padding: 0 0 1.2rem; }
+  details ul { margin: 0.6rem 0 0; padding-left: 1.2rem; }
+  details li { margin-top: 0.45rem; }
+  footer { margin-top: 3rem; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="brand"><img src="images/icon.png" alt=""> War Room TV</div>
+
+  <h1>The league's scores, on top of the game.</h1>
+  <p class="lede">A score box for every Real Men Pretend matchup, a ticker of injuries and point leaders, and a celebration when one of your starters scores. It sits over whatever you are watching.</p>
+
+  <div class="get">
+    <a class="button for-pc" id="download" href="https://github.com/jimling116/war-room-tv/releases/latest/download/War-Room-TV-Setup.exe">Download for Windows<small>Free &middot; 105 MB &middot; Windows 10 or 11</small></a>
+
+    <div class="note for-phone">
+      <b>You are on a phone.</b> War Room TV goes on the Windows computer that shows the game, like a laptop plugged into the TV. Open this page on that computer:
+      <p class="address" id="address"></p>
+      <div class="row">
+        <button class="button quiet" id="copy" type="button">Copy the link</button>
+        <button class="button quiet" id="share" type="button" hidden>Send it to myself</button>
+      </div>
+    </div>
+
+    <div class="note for-mac">
+      <b>The Mac version is not ready yet.</b> It will be on this page when it is. War Room TV works on Windows 10 and 11 today.
+    </div>
+
+    <p class="dim small for-pc">No account, no sign-up. On a Mac? That version is on the way.</p>
+  </div>
+
+  <figure class="tv">
+    <div class="tv-screen">
+      <img src="images/overlay.png" width="1280" height="720" alt="Six small score boxes down the right side of a football field and a strip of injury news along the bottom.">
+    </div>
+    <div class="tv-stand"></div>
+    <figcaption class="dim small">The boxes and the strip are War Room TV. The game underneath is yours. Teams and scores here are made up.</figcaption>
+  </figure>
+
+  <h2>Three steps</h2>
+  <ol class="steps">
+    <li>
+      <h3>Download it</h3>
+      <p>Press the yellow button. The file is called <b>War-Room-TV-Setup.exe</b>.</p>
+      <p>Your browser may hold it back, because it is a new file that few people have downloaded. Keep it:</p>
+      <ul class="browsers">
+        <li><b>Edge:</b> point at the download, click the three dots, then <b>Keep</b>, then <b>Show more</b>, then <b>Keep anyway</b>.</li>
+        <li><b>Chrome:</b> if it calls the download suspicious, choose <b>Download suspicious file</b>.</li>
+      </ul>
+    </li>
+
+    <li>
+      <h3>Open it and tell Windows it is fine</h3>
+      <p>Open the file. Windows shows a blue box. It does this for every app whose maker has not bought a certificate from Microsoft, and this one was made for our league, for free.</p>
+      <div class="shots two">
+        <figure class="shot">
+          <div class="frame">
+            <img src="images/warning-1.png" width="534" height="500" alt="A blue Windows box titled Windows protected your PC, with a More info link under the text.">
+            <div class="ring beside" style="--x: 3.93%; --y: 23.6%; --w: 12.17%; --h: 4.2%"><span>First, click More info</span></div>
+          </div>
+          <figcaption class="dim small">There is no Run button yet. It is behind <b>More info</b>.</figcaption>
+        </figure>
+        <figure class="shot">
+          <div class="frame">
+            <img src="images/warning-2.png" width="534" height="500" alt="The same blue box, now naming the app and showing a Run anyway button.">
+            <div class="ring" style="--x: 52.81%; --y: 87.8%; --w: 20.41%; --h: 7%"><span>Then click Run anyway</span></div>
+          </div>
+          <figcaption class="dim small">"Unknown publisher" is the missing certificate. It installs in under a minute and asks for no password.</figcaption>
+        </figure>
+      </div>
+    </li>
+
+    <li>
+      <h3>Pick your team</h3>
+      <p>The app opens by itself and asks which team is yours. Click it once. It remembers.</p>
+      <div class="shots">
+        <figure class="shot wide">
+          <div class="frame"><img src="images/team-select.png" width="1024" height="640" alt="A dark screen asking Which team is yours, with twelve team names to choose from."></div>
+          <figcaption class="dim small">Yours will list our twelve teams.</figcaption>
+        </figure>
+      </div>
+      <p>Now put the game on full screen the way you always do. The score boxes stay on top, and your mouse and keyboard still work the video underneath.</p>
+    </li>
+  </ol>
+
+  <h2>Four keys worth knowing</h2>
+  <p class="dim">They work from anywhere, even while the game is full screen.</p>
+  <ul class="keys">
+    <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> &nbsp;shows a test celebration</li>
+    <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>H</kbd> &nbsp;hides or shows everything</li>
+    <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>M</kbd> &nbsp;mutes or unmutes</li>
+    <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd> &nbsp;opens settings</li>
+  </ul>
+
+  <h2>If you get stuck</h2>
+
+  <details>
+    <summary>I installed it and now I cannot find it</summary>
+    <div>
+      <p>It has no window of its own: only the boxes over the game, and a small TV icon by the clock (it may be behind the <b>^</b> arrow). To get settings back, press <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd>, click that icon, or just open War Room TV again from the Start menu.</p>
+      <p>To close it, click the TV icon and choose <b>Quit</b>.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>The celebration spoils plays before I see them</summary>
+    <div>
+      <p>Streams run behind the real game, some by a minute. In settings, raise <b>Delay</b> until the celebration lines up with what is on your screen.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>I want different sounds, or none</summary>
+    <div>
+      <p>The clips are in a folder called <b>War Room TV</b> inside your Music folder. Drop your own sound files in there for your touchdowns, and into its <b>against</b> folder for when your opponent scores. Delete any you do not like and they stay gone. <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>M</kbd> mutes everything.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Windows says Smart App Control blocked it</summary>
+    <div>
+      <p>That is a stricter Windows setting than the blue box, and it offers no "Run anyway". It refuses every app without a certificate, and there is no exception for one app. The only way past it is to switch Smart App Control off, in <b>Windows Security</b>, under <b>App &amp; browser control</b>. On an up-to-date Windows 11 you can switch it back on afterwards; on an older one you cannot, so decide before you do it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Updating it, or removing it</summary>
+    <div>
+      <ul>
+        <li><b>A new version:</b> download it here again and open it. It replaces the old one and keeps your team and your sounds. You do not need to close the app first. Windows shows the blue box again each time.</li>
+        <li><b>Removing it:</b> Settings, Apps, Installed apps, War Room TV, Uninstall. Your sounds folder is left alone; delete it yourself if you want it gone.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary>What it does on your computer</summary>
+    <div>
+      <ul>
+        <li>It reads our league's scores from Sleeper and game data from ESPN, the same public information their own sites show.</li>
+        <li>It sends nothing about you anywhere. There is no account and no password.</li>
+        <li>It never records, captures or reads your screen or the video. It only draws on top of it.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details>
+    <summary>Music credits</summary>
+    <div>
+      <p>The app plays five-second excerpts, cut with a fade-out and with the volume evened, from these recordings:</p>
+      <ul class="small">
+        <li>"Mars, the Bringer of War", Gustav Holst, played by the U.S. Air Force Heritage of America Band. Public domain.</li>
+        <li>"Legionnaire", "Simulacra" and "Juggernaut" by Scott Buckley, released under CC BY 4.0. <a href="https://www.scottbuckley.com.au" rel="noopener">scottbuckley.com.au</a></li>
+        <li>"Shadowreign" by Alexander Nakarada (<a href="https://creatorchords.com" rel="noopener">creatorchords.com</a>), from free-stock-music.com, released under CC BY 4.0.</li>
+        <li>Bach, "Toccata and Fugue in D Minor", played by the Illinois Brass Band, released under CC BY 3.0, from Free Music Archive.</li>
+        <li>Chopin, "Funeral March" (Piano Sonata No. 2), played by Paul Pitman, a Musopen recording. Public domain.</li>
+        <li>Mussorgsky, "Night on Bald Mountain", a Musopen recording. Public domain.</li>
+        <li>"Sad Trombone" by Joe Lamb, from SoundBible, released under CC BY 3.0.</li>
+      </ul>
+      <p class="small">Licences: <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>, <a href="https://creativecommons.org/licenses/by/3.0/" rel="noopener">CC BY 3.0</a>. The full list with links is inside the app, under settings.</p>
+    </div>
+  </details>
+
+  <footer class="dim small">
+    <p>Version 0.1.0. Made for the Real Men Pretend league. Not connected to the NFL, ESPN, Sleeper or any TV service.</p>
+  </footer>
+</div>
+
+<script>
+  // Phones and Macs cannot use the Windows download, so they get a note instead of the button.
+  (function () {
+    var ua = navigator.userAgent || '';
+    var touchMac = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1; // an iPad that says it is a Mac
+    var phone = /Android|iPhone|iPad|iPod/i.test(ua) || touchMac;
+    var mac = /Macintosh|Mac OS X/.test(ua) && !phone;
+    document.documentElement.setAttribute('data-device', phone ? 'phone' : mac ? 'mac' : 'pc');
+
+    var here = location.href.split('#')[0].split('?')[0];
+    var address = document.getElementById('address');
+    if (address) address.textContent = here.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+    var copy = document.getElementById('copy');
+    if (copy) copy.addEventListener('click', function () {
+      var done = function () { copy.textContent = 'Copied'; setTimeout(function () { copy.textContent = 'Copy the link'; }, 2500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(here).then(done, function () { prompt('Copy this link:', here); });
+      else prompt('Copy this link:', here);
+    });
+
+    var share = document.getElementById('share');
+    if (share && navigator.share) {
+      share.hidden = false;
+      share.addEventListener('click', function () {
+        navigator.share({ title: 'War Room TV', text: 'Open this on the computer that shows the game:', url: here }).catch(function () {});
+      });
+    }
+  })();
+</script>
+</body>
+</html>
