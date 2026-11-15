@@ -105,6 +105,7 @@
   @media (min-width: 44rem) { .shots.two { grid-template-columns: 1fr 1fr; } }
   .shot { margin: 0; }
   .shot .frame { position: relative; max-width: 534px; }
+  .shot .frame.narrow { max-width: 384px; }
   .shot img { display: block; width: 100%; height: auto; border-radius: 0.3rem; }
   .shot figcaption { margin-top: 0.6rem; }
   .shot.wide .frame { max-width: 100%; }
@@ -183,10 +184,16 @@
     <li>
       <h3>Download it</h3>
       <p>Press the yellow button. The file is called <b>War-Room-TV-Setup.exe</b>.</p>
-      <p>Your browser may hold it back, because it is a new file that few people have downloaded. Keep it:</p>
+      <p><b>Chrome</b> usually just downloads it. <b>Edge</b> holds it back, because it is a new file that few people have downloaded yet, and shows this:</p>
+      <div class="shots">
+        <figure class="shot">
+          <div class="frame narrow"><img src="images/edge-download.png" width="384" height="194" alt="Edge's Downloads panel saying War-Room-TV-Setup.exe isn't commonly downloaded."></div>
+          <figcaption class="dim small">Edge's message. The file is not kept until you say so.</figcaption>
+        </figure>
+      </div>
       <ul class="browsers">
-        <li><b>Edge:</b> point at the download, click the three dots, then <b>Keep</b>, then <b>Show more</b>, then <b>Keep anyway</b>.</li>
-        <li><b>Chrome:</b> if it calls the download suspicious, choose <b>Download suspicious file</b>.</li>
+        <li><b>In Edge:</b> move the mouse over that message and click the three dots that appear. Choose <b>Keep</b>, then <b>Show more</b>, then <b>Keep anyway</b>.</li>
+        <li><b>In Chrome,</b> if it ever calls the download suspicious, choose <b>Download suspicious file</b>.</li>
       </ul>
     </li>
 
